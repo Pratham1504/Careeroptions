@@ -981,204 +981,196 @@
     function renderCard() {
       const option = OPTIONS[currentIndex];
       const container = document.getElementById('cardContainer');
-      
       const status = selections[option.id] || 'none';
       
       container.innerHTML = `
         <div class="card-category">${option.category}</div>
         <h2 class="card-title">${option.title}</h2>
-        <p class="card-subtitle">${option}</p>
-        <function_calls>
-<invoke name="artifacts">
-<parameter name="command">update</parameter>
-<parameter name="id">career_explorer_arch</parameter>
-<parameter name="old_str">      container.innerHTML =         <div class="card-category">${option.category}</div>         <h2 class="card-title">${option.title}</h2>         <p class="card-subtitle">${option</parameter> <parameter name="new_str">      container.innerHTML =
-<div class="card-category">${option.category}</div>
-<h2 class="card-title">${option.title}</h2>
-<p class="card-subtitle">${option.short}</p>
-<p class="card-description">${option.description}</p>
-<div class="pros-cons-container">
-      <div class="pros-cons-box">
-        <h4>✅ Advantages</h4>
-        <ul>
-          ${option.pros.map(pro => `<li>${pro}</li>`).join('')}
-        </ul>
-      </div>
-      <div class="pros-cons-box">
-        <h4>⚠️ Challenges</h4>
-        <ul>
-          ${option.cons.map(con => `<li>${con}</li>`).join('')}
-        </ul>
-      </div>
-    </div>
+        <p class="card-subtitle">${option.short}</p>
+        <p class="card-description">${option.description}</p>
+        
+        <div class="pros-cons-container">
+          <div class="pros-cons-box">
+            <h4>✅ Advantages</h4>
+            <ul>
+              ${option.pros.map(pro => `<li>${pro}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="pros-cons-box">
+            <h4>⚠️ Challenges</h4>
+            <ul>
+              ${option.cons.map(con => `<li>${con}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
 
-    <div class="action-steps">
-      <h4>🎯 Your Next Steps</h4>
-      <ol>
-        ${option.actions.map(action => `<li>${action}</li>`).join('')}
-      </ol>
-    </div>
+        <div class="action-steps">
+          <h4>🎯 Your Next Steps</h4>
+          <ol>
+            ${option.actions.map(action => `<li>${action}</li>`).join('')}
+          </ol>
+        </div>
 
-    <div class="button-group">
-      <button class="action-btn ${status === 'interested' ? 'interested' : ''}" onclick="markOption('interested')">
-        <span class="emoji">💚</span>
-        <span>Interested</span>
-      </button>
-      <button class="action-btn ${status === 'review' ? 'review' : ''}" onclick="markOption('review')">
-        <span class="emoji">📋</span>
-        <span>Review Later</span>
-      </button>
-      <button class="action-btn ${status === 'not-interested' ? 'not-interested' : ''}" onclick="markOption('not-interested')">
-        <span class="emoji">✖️</span>
-        <span>Not For Me</span>
-      </button>
-    </div>
-  `;
+        <div class="button-group">
+          <button class="action-btn ${status === 'interested' ? 'interested' : ''}" onclick="markOption('interested')">
+            <span class="emoji">💚</span>
+            <span>Interested</span>
+          </button>
+          <button class="action-btn ${status === 'review' ? 'review' : ''}" onclick="markOption('review')">
+            <span class="emoji">📋</span>
+            <span>Review Later</span>
+          </button>
+          <button class="action-btn ${status === 'not-interested' ? 'not-interested' : ''}" onclick="markOption('not-interested')">
+            <span class="emoji">✖️</span>
+            <span>Not For Me</span>
+          </button>
+        </div>
+      `;
 
-  updateProgress();
-  updateNavButtons();
-}
-
-// Mark option
-function markOption(status) {
-  const option = OPTIONS[currentIndex];
-  selections[option.id] = status;
-  saveData();
-  renderCard();
-}
-
-// Update progress
-function updateProgress() {
-  const progress = ((currentIndex + 1) / OPTIONS.length) * 100;
-  document.getElementById('progressBar').style.width = progress + '%';
-  document.getElementById('progressText').textContent = `Option ${currentIndex + 1} of ${OPTIONS.length}`;
-}
-
-// Update navigation buttons
-function updateNavButtons() {
-  document.getElementById('prevBtn').disabled = currentIndex === 0;
-  document.getElementById('nextBtn').disabled = currentIndex === OPTIONS.length - 1;
-}
-
-// Navigation
-function nextCard() {
-  if (currentIndex < OPTIONS.length - 1) {
-    currentIndex++;
-    renderCard();
-  }
-}
-
-function previousCard() {
-  if (currentIndex > 0) {
-    currentIndex--;
-    renderCard();
-  }
-}
-
-// Show summary
-function showSummary() {
-  showPage('summaryPage');
-  renderSummary();
-}
-
-// Render summary
-function renderSummary() {
-  const interested = [];
-  const review = [];
-  const notInterested = [];
-  
-  OPTIONS.forEach(option => {
-    const status = selections[option.id];
-    if (status === 'interested') interested.push(option);
-    else if (status === 'review') review.push(option);
-    else if (status === 'not-interested') notInterested.push(option);
-  });
-
-  document.getElementById('interestedCount').textContent = interested.length;
-  document.getElementById('reviewCount').textContent = review.length;
-  document.getElementById('viewedCount').textContent = Object.keys(selections).length;
-
-  renderSummarySection('interestedSection', 'interestedList', interested, 'interested');
-  renderSummarySection('reviewSection', 'reviewList', review, 'review');
-  renderSummarySection('notInterestedSection', 'notInterestedList', notInterested, 'not-interested');
-}
-
-function renderSummarySection(sectionId, listId, options, statusClass) {
-  const section = document.getElementById(sectionId);
-  const list = document.getElementById(listId);
-  
-  if (options.length === 0) {
-    section.style.display = 'none';
-    return;
-  }
-
-  section.style.display = 'block';
-  list.innerHTML = options.map(option => `
-    <div class="option-card-small">
-      <div>
-        <div class="option-name">${option.title}</div>
-        <div class="option-type">${option.category}</div>
-      </div>
-      <span class="status-badge ${statusClass}">
-        ${statusClass === 'interested' ? '💚' : statusClass === 'review' ? '📋' : '✖️'}
-      </span>
-    </div>
-  `).join('');
-}
-
-// Back to exploring
-function backToExploring() {
-  showPage('explorerPage');
-  renderCard();
-}
-
-// Restart
-function restartExploration() {
-  if (confirm('This will clear all your selections. Are you sure?')) {
-    selections = {};
-    currentIndex = 0;
-    saveData();
-    showPage('explorerPage');
-    renderCard();
-  }
-}
-
-// Touch gestures for mobile
-let touchStartX = 0;
-let touchEndX = 0;
-
-document.addEventListener('touchstart', e => {
-  touchStartX = e.changedTouches[0].screenX;
-});
-
-document.addEventListener('touchend', e => {
-  touchEndX = e.changedTouches[0].screenX;
-  handleSwipe();
-});
-
-function handleSwipe() {
-  const swipeThreshold = 50;
-  const diff = touchStartX - touchEndX;
-  
-  if (Math.abs(diff) > swipeThreshold) {
-    if (diff > 0 && currentIndex < OPTIONS.length - 1) {
-      nextCard();
-    } else if (diff < 0 && currentIndex > 0) {
-      previousCard();
+      updateProgress();
+      updateNavButtons();
     }
-  }
-}
 
-// Keyboard navigation
-document.addEventListener('keydown', e => {
-  if (document.getElementById('explorerPage').classList.contains('active')) {
-    if (e.key === 'ArrowRight') nextCard();
-    else if (e.key === 'ArrowLeft') previousCard();
-  }
-});
+    // Mark option
+    function markOption(status) {
+      const option = OPTIONS[currentIndex];
+      selections[option.id] = status;
+      saveData();
+      renderCard();
+    }
 
-// Initialize
-loadData();
-    </script>
+    // Update progress
+    function updateProgress() {
+      const progress = ((currentIndex + 1) / OPTIONS.length) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+      document.getElementById('progressText').textContent = `Option ${currentIndex + 1} of ${OPTIONS.length}`;
+    }
+
+    // Update navigation buttons
+    function updateNavButtons() {
+      document.getElementById('prevBtn').disabled = currentIndex === 0;
+      document.getElementById('nextBtn').disabled = currentIndex === OPTIONS.length - 1;
+    }
+
+    // Navigation
+    function nextCard() {
+      if (currentIndex < OPTIONS.length - 1) {
+        currentIndex++;
+        renderCard();
+      }
+    }
+
+    function previousCard() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderCard();
+      }
+    }
+
+    // Show summary
+    function showSummary() {
+      showPage('summaryPage');
+      renderSummary();
+    }
+
+    // Render summary
+    function renderSummary() {
+      const interested = [];
+      const review = [];
+      const notInterested = [];
+      
+      OPTIONS.forEach(option => {
+        const status = selections[option.id];
+        if (status === 'interested') interested.push(option);
+        else if (status === 'review') review.push(option);
+        else if (status === 'not-interested') notInterested.push(option);
+      });
+
+      document.getElementById('interestedCount').textContent = interested.length;
+      document.getElementById('reviewCount').textContent = review.length;
+      document.getElementById('viewedCount').textContent = Object.keys(selections).length;
+
+      renderSummarySection('interestedSection', 'interestedList', interested, 'interested');
+      renderSummarySection('reviewSection', 'reviewList', review, 'review');
+      renderSummarySection('notInterestedSection', 'notInterestedList', notInterested, 'not-interested');
+    }
+
+    function renderSummarySection(sectionId, listId, options, statusClass) {
+      const section = document.getElementById(sectionId);
+      const list = document.getElementById(listId);
+      
+      if (options.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+
+      section.style.display = 'block';
+      list.innerHTML = options.map(option => `
+        <div class="option-card-small">
+          <div>
+            <div class="option-name">${option.title}</div>
+            <div class="option-type">${option.category}</div>
+          </div>
+          <span class="status-badge ${statusClass}">
+            ${statusClass === 'interested' ? '💚' : statusClass === 'review' ? '📋' : '✖️'}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    // Back to exploring
+    function backToExploring() {
+      showPage('explorerPage');
+      renderCard();
+    }
+
+    // Restart
+    function restartExploration() {
+      if (confirm('This will clear all your selections. Are you sure?')) {
+        selections = {};
+        currentIndex = 0;
+        saveData();
+        showPage('explorerPage');
+        renderCard();
+      }
+    }
+
+    // Touch gestures for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const diff = touchStartX - touchEndX;
+      
+      if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0 && currentIndex < OPTIONS.length - 1) {
+          nextCard();
+        } else if (diff < 0 && currentIndex > 0) {
+          previousCard();
+        }
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('explorerPage').classList.contains('active')) {
+        if (e.key === 'ArrowRight') nextCard();
+        else if (e.key === 'ArrowLeft') previousCard();
+      }
+    });
+
+    // Initialize
+    loadData();
+  </script>
 </body>
-</html></parameter>
+</html>
