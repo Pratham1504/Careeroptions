@@ -3,477 +3,1182 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Options for Prarthna — Career Explorer</title>
-  <meta name="description" content="Interactive career explorer for final-year BA-LLB students. Explore options, mark interest, review and export your choices. Mobile-first and offline-friendly." />
+  <title>Career Options for Prarthna</title>
+  <meta name="description" content="Explore your career options after BA-LLB" />
   <style>
-    /* (same CSS as before — omitted here for brevity; use the CSS from your working file) */
-    :root{--bg:#071227; --card:#081428; --muted:#98a0b3; --accent:#6ee7b7; --accent-2:#7dd3fc; --glass: rgba(255,255,255,0.03); --glass-2: rgba(255,255,255,0.02); --glass-border: rgba(255,255,255,0.04); --max-width:1080px; --radius:14px; --transition:220ms; font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,#021223 0%, #071227 60%);color:#e6eef6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-    /* rest of your CSS... (keep exactly as in your file) */
-    /* For safety the full CSS should be kept; paste your original CSS here. */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    .page {
+      display: none;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .page.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Welcome Page */
+    .welcome-container {
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+      animation: fadeIn 0.8s ease;
+    }
+
+    .welcome-logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 30px;
+      background: white;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: bold;
+      color: #667eea;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .welcome-title {
+      font-size: 42px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .welcome-subtitle {
+      font-size: 20px;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .feature-list {
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px 0;
+      text-align: left;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .feature-list h3 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #667eea;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      background: white;
+      color: #667eea;
+      border: none;
+      padding: 18px 40px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+
+    .btn:active {
+      transform: translateY(-1px);
+    }
+
+    /* Explorer Page */
+    .explorer-container {
+      max-width: 900px;
+      margin: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .progress-header {
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(102,126,234,0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    .progress-text {
+      text-align: center;
+      font-weight: 600;
+      color: #667eea;
+      font-size: 14px;
+    }
+
+    .card-container {
+      background: white;
+      border-radius: 25px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      animation: slideIn 0.5s ease;
+    }
+
+    .card-category {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .card-subtitle {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .card-description {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 30px;
+      flex: 1;
+    }
+
+    .pros-cons-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .pros-cons-box {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 20px;
+    }
+
+    .pros-cons-box h4 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pros-cons-box ul {
+      list-style: none;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #666;
+    }
+
+    .pros-cons-box li {
+      margin-bottom: 8px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .pros-cons-box li:before {
+      content: "•";
+      position: absolute;
+      left: 5px;
+      font-weight: bold;
+    }
+
+    .action-steps {
+      background: #fff9e6;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-left: 4px solid #fbbf24;
+    }
+
+    .action-steps h4 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: #d97706;
+    }
+
+    .action-steps ol {
+      padding-left: 20px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #666;
+    }
+
+    .action-steps li {
+      margin-bottom: 8px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 16px 20px;
+      border: 2px solid #e5e7eb;
+      background: white;
+      border-radius: 15px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .action-btn .emoji {
+      font-size: 24px;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .action-btn.interested {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-color: #10b981;
+      color: white;
+    }
+
+    .action-btn.review {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border-color: #f59e0b;
+      color: white;
+    }
+
+    .action-btn.not-interested {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      border-color: #ef4444;
+      color: white;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .nav-btn.secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    /* Summary Page */
+    .summary-container {
+      max-width: 800px;
+      margin: auto;
+      animation: fadeIn 0.8s ease;
+    }
+
+    .summary-header {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .summary-header h2 {
+      font-size: 36px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .summary-stats {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .summary-section {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .summary-section h3 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .option-card-small {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .option-card-small:hover {
+      transform: translateX(5px);
+      background: #e5e7eb;
+    }
+
+    .option-name {
+      font-weight: 600;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .option-type {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-badge.interested {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-badge.review {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-badge.not-interested {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .summary-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .summary-buttons .btn {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .welcome-title {
+        font-size: 32px;
+      }
+
+      .welcome-subtitle {
+        font-size: 18px;
+      }
+
+      .card-container {
+        padding: 25px;
+      }
+
+      .card-title {
+        font-size: 26px;
+      }
+
+      .pros-cons-container {
+        grid-template-columns: 1fr;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .action-btn {
+        min-width: 100%;
+      }
+
+      .summary-stats {
+        flex-direction: column;
+      }
+
+      .stat-box {
+        width: 100%;
+      }
+    }
+
+    /* Swipe hint */
+    .swipe-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 13px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .swipe-hint.show {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
-  <!-- (keep the exact same HTML structure and markup you already had) -->
-  <!-- For brevity, I'm including the important script fixes only — paste the rest of your original HTML markup (header, landing, main, footer) above this script. -->
+  <!-- Welcome Page -->
+  <div id="welcomePage" class="page active">
+    <div class="welcome-container">
+      <div class="welcome-logo">P</div>
+      <h1 class="welcome-title">Hey Prarthna! 👋</h1>
+      <p class="welcome-subtitle">
+        You're about to complete your BA-LLB, and the future is full of exciting possibilities. 
+        I've put together 9 carefully selected career options just for you.
+      </p>
+      
+      <div class="feature-list">
+        <h3>What you'll find here:</h3>
+        <div class="feature-item">
+          <div class="feature-icon">📚</div>
+          <div>9 career paths with detailed insights</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">✨</div>
+          <div>Pros, cons, and actionable next steps</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💡</div>
+          <div>Mark what interests you as you explore</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📱</div>
+          <div>Works perfectly on your phone</div>
+        </div>
+      </div>
 
-  <!-- Begin script with fixes -->
+      <button class="btn" onclick="startExploring()">Let's Explore Your Options</button>
+    </div>
+  </div>
+
+  <!-- Explorer Page -->
+  <div id="explorerPage" class="page">
+    <div class="explorer-container">
+      <div class="progress-header">
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-text" id="progressText">Option 1 of 9</div>
+      </div>
+
+      <div class="card-container" id="cardContainer">
+        <!-- Dynamic content will be inserted here -->
+      </div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn secondary" id="prevBtn" onclick="previousCard()">
+          ← Previous
+        </button>
+        <button class="nav-btn secondary" onclick="showSummary()">
+          View Summary
+        </button>
+        <button class="nav-btn" id="nextBtn" onclick="nextCard()">
+          Next →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Page -->
+  <div id="summaryPage" class="page">
+    <div class="summary-container">
+      <div class="summary-header">
+        <h2>Your Career Exploration Summary</h2>
+        <p style="color: #666; margin-top: 10px;">Here's what you've discovered so far</p>
+        <div class="summary-stats">
+          <div class="stat-box">
+            <div class="stat-number" id="interestedCount">0</div>
+            <div class="stat-label">Interested</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" id="reviewCount">0</div>
+            <div class="stat-label">For Review</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" id="viewedCount">0</div>
+            <div class="stat-label">Options Viewed</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="interestedSection" class="summary-section" style="display: none;">
+        <h3>💚 Options You're Interested In</h3>
+        <div id="interestedList"></div>
+      </div>
+
+      <div id="reviewSection" class="summary-section" style="display: none;">
+        <h3>📋 Options to Review Later</h3>
+        <div id="reviewList"></div>
+      </div>
+
+      <div id="notInterestedSection" class="summary-section" style="display: none;">
+        <h3>Options You've Passed On</h3>
+        <div id="notInterestedList"></div>
+      </div>
+
+      <div class="summary-section">
+        <div class="summary-buttons">
+          <button class="btn" onclick="backToExploring()">Continue Exploring</button>
+          <button class="btn" onclick="restartExploration()">Start Over</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swipe-hint" id="swipeHint">Swipe left or right to navigate →</div>
+
   <script>
-    /* ===== DATA (unchanged) ===== */
     const OPTIONS = [
-      {id:'litigation', title:'Litigation / Advocacy', type:'practice', short:'Courtroom practice, trials, advocacy',
-        details:'Litigation involves representing clients in courts, drafting pleadings, preparing arguments, and learning direct advocacy. It is a high-learning, high-pressure field ideal for someone who enjoys real-time problem solving and courtroom strategy. Juniors typically start with drafting, research, filing, and observing seniors in court.',
-        pros:['Fastest legal learning curve','High independence long-term','Deep understanding of procedure & evidence','Networking with judges and senior advocates'],
-        cons:['Low/unstable income initially','Long working hours','High pressure & unpredictable schedules'],
-        actions:['Take drafting-heavy internships','Specialize early (criminal/civil/ADR)','Follow judgments daily from SC/HC','Maintain case-notes journal','Shadow seniors in trials']},
-      {id:'corporate', title:'Corporate / Transactional Practice', type:'corporate', short:'Contracts, M&A, compliance',
-        details:'Corporate law deals with structuring business transactions, drafting and negotiating contracts, advising companies on legal risks, ensuring compliance, and managing due diligence. Juniors work on contracts, research, and assisting in transactions.',
-        pros:['Good salary from the start','Structured corporate environment','Business exposure','Opportunities in large firms'],
-        cons:['Document-heavy work early in career','Long hours in top law firms','Less courtroom work'],
-        actions:['Master contract drafting','Learn M&A basics & company law','Intern at corporate law firms','Build a drafting portfolio','Learn basic finance']},
-      {id:'llm', title:'LLM (India / Abroad)', type:'academic', short:'Specialize in law — advanced degree',
-        details:'LLM is suited for those who want specialization, international exposure, or future academic roles. It is especially useful for careers in academia, policy, international law, arbitration, taxation, or niche corporate fields.',
-        pros:['Specialized knowledge','Academic advancement','Global recognition (foreign LLM)','Stronger profile for think tanks'],
-        cons:['High cost for foreign LLMs','Not necessary for litigation','Admissions require strong SOP'],
-        actions:['Pick specialization early','Publish articles','Prepare SOP & collect LORs','Shortlist 6–8 universities','Apply for scholarships early']},
-      {id:'judicial', title:'Judicial Services', type:'practice', short:'State judiciary / magistrate exams',
-        details:'Judicial Services is the pathway to becoming a Civil Judge / Judicial Magistrate. It requires deep knowledge of procedural and substantive law along with disciplined preparation. Excellent for those seeking prestige, stability and public service.',
-        pros:['Highly respected role','Stable government career','Direct role in justice system','Clear promotion ladder'],
-        cons:['Very competitive exams','Requires 1–2 years of prep','High syllabus volume'],
-        actions:['Daily reading of bare acts','Solve 10 years of PYQs','Join test series','Focus on writing practice','Keep notes subject-wise']},
-      {id:'govt', title:'Government / Legal Aid / NGOs', type:'public', short:'Policy, public law, legal aid',
-        details:'Government and NGO roles include working in commissions, ministries, legal aid cells, and public policy organizations. Work ranges from drafting reports, doing research, preparing recommendations, and field visits. Ideal for societal impact.',
-        pros:['High social impact','Exposure to policy','Work-life balance','Opportunities with UN bodies'],
-        cons:['Moderate salary','Competitive hiring','Fewer openings'],
-        actions:['Volunteer with legal aid cells','Apply to govt internships','Publish policy briefs','Develop writing portfolio']},
-      {id:'inhouse', title:'In-House Counsel / Compliance', type:'corporate', short:'Corporate legal teams, compliance',
-        details:'In-house counsel work directly inside companies, advising business teams, drafting contracts, ensuring legal compliance, managing disputes, and collaborating with external law firms. Perfect for predictable hours and business exposure.',
-        pros:['Better work-life balance','Steady compensation','Long-term stability','Business + legal exposure'],
-        cons:['Most roles require 1–2 years experience','Less pure lawyering'],
-        actions:['Learn privacy & compliance','Take compliance certifications','Build Excel skills','Intern in corporate legal teams']},
-      {id:'research', title:'Research & Academia / Think-tanks', type:'academic', short:'Research, teaching, policy work',
-        details:'Research roles involve academic writing, assisting professors, policy analysis, creating reports, and conducting legal studies. Ideal for those who enjoy reading, writing, teaching, and want a PhD/academic path.',
-        pros:['Intellectual satisfaction','Publications & academic profile','Path to teaching/PhD','Work with top researchers'],
-        cons:['Lower initial salary','Competitive selection'],
-        actions:['Write articles & research papers','Assist professors','Build writing samples','Prepare for UGC NET']},
-      {id:'legaltech', title:'Legal Tech / Startups / Consulting', type:'corporate', short:'Product and tech-driven legal roles',
-        details:'LegalTech involves using technology to solve legal problems — contract automation, legal AI, compliance dashboards. Suited for those who enjoy technology, design, operations, or business-building.',
-        pros:['Fast-growing industry','High salary in product roles','Creative work','Remote-friendly'],
-        cons:['Requires tech-business understanding','Learning curve for tools'],
-        actions:['Learn no-code tools','Understand contract automation','Work with startups','Build mini legal tools']},
-      {id:'special', title:'Special Routes: Arbitration / Mediation / Patent', type:'practice', short:'Alternate dispute resolution & IP',
-        details:'Specialized verticals: Arbitration for commercial disputes, Mediation for conflict resolution, Patent Agent for technical IP work. These fields offer high-paying niche roles after experience.',
-        pros:['High specialization','Arbitration = excellent income','Growing mediation field','Patent = niche expertise'],
-        cons:['Requires years to build credibility','Patent needs science background'],
-        actions:['Do Arbitration/Mediation courses','Work under arbitrators','Prepare for Patent Agent exam if eligible']}
+      {
+        id: 'litigation',
+        title: 'Litigation & Advocacy',
+        category: 'Legal Practice',
+        short: 'Represent clients in court, draft pleadings, and build your courtroom presence',
+        description: 'Litigation involves representing clients in courts, drafting pleadings, preparing arguments, and learning direct advocacy. It\'s a high-learning, high-pressure field ideal for someone who enjoys real-time problem-solving and courtroom strategy. You\'ll start with drafting, research, and filing while observing seniors, then gradually handle arguments and client meetings.',
+        pros: [
+          'Fastest legal learning curve',
+          'High independence long-term',
+          'Deep understanding of procedure',
+          'Build strong courtroom identity'
+        ],
+        cons: [
+          'Unstable income initially',
+          'Long and unpredictable hours',
+          'High pressure environment',
+          'Client management challenges'
+        ],
+        actions: [
+          'Take drafting-heavy internships',
+          'Specialize early (criminal/civil/ADR)',
+          'Follow daily judgments from SC/HC',
+          'Maintain a case-notes journal',
+          'Shadow seniors in actual trials'
+        ]
+      },
+      {
+        id: 'corporate',
+        title: 'Corporate Law Practice',
+        category: 'Business Law',
+        short: 'Work with businesses on contracts, mergers, and legal compliance',
+        description: 'Corporate law focuses on structuring business transactions, drafting contracts, advising companies on legal risks, and ensuring compliance. You\'ll work on mergers, investments, and commercial negotiations. Perfect if you prefer structured learning, business exposure, and stable compensation.',
+        pros: [
+          'Good salary from day one',
+          'Structured work environment',
+          'Exposure to business world',
+          'Clear career progression'
+        ],
+        cons: [
+          'Document-heavy early work',
+          'Long hours in top firms',
+          'Less courtroom experience',
+          'High precision expectations'
+        ],
+        actions: [
+          'Master contract drafting',
+          'Learn M&A and company law basics',
+          'Intern at corporate law firms',
+          'Build a strong drafting portfolio',
+          'Learn basic finance concepts'
+        ]
+      },
+      {
+        id: 'llm',
+        title: 'Advanced Studies (LLM)',
+        category: 'Academia',
+        short: 'Specialize in a specific area of law with a Master\'s degree',
+        description: 'An LLM helps you specialize in areas like IPR, corporate law, or international law. Foreign LLMs (USA/UK) open doors to global opportunities, while Indian LLMs strengthen your academic profile. Great for those interested in academia, policy work, or specialized practice areas.',
+        pros: [
+          'Deep specialized knowledge',
+          'Academic credentials',
+          'Global networking (foreign LLM)',
+          'Opens doors to teaching and research'
+        ],
+        cons: [
+          'Expensive, especially abroad',
+          'Not always necessary for practice',
+          'Requires strong applications',
+          'Time away from practice'
+        ],
+        actions: [
+          'Choose your specialization early',
+          'Start publishing articles',
+          'Prepare strong statement of purpose',
+          'Collect recommendation letters',
+          'Research scholarship opportunities'
+        ]
+      },
+      {
+        id: 'judicial',
+        title: 'Judicial Services',
+        category: 'Government',
+        short: 'Become a judge through state judiciary examinations',
+        description: 'Judicial Services leads to becoming a Civil Judge or Judicial Magistrate. You\'ll adjudicate disputes, interpret laws, and manage courtroom proceedings. It requires dedicated preparation but offers stability, respect, and direct impact on the justice system.',
+        pros: [
+          'Highly respected position',
+          'Stable government career',
+          'Direct role in delivering justice',
+          'Clear promotion structure'
+        ],
+        cons: [
+          'Extremely competitive exams',
+          'Requires 1-2 years of focused prep',
+          'High syllabus volume',
+          'Limited positions available'
+        ],
+        actions: [
+          'Study bare acts daily',
+          'Solve 10 years of past papers',
+          'Join a good test series',
+          'Practice answer writing',
+          'Create subject-wise notes'
+        ]
+      },
+      {
+        id: 'govt',
+        title: 'Government & Policy Work',
+        category: 'Public Service',
+        short: 'Work with government bodies, NGOs, or legal aid organizations',
+        description: 'Work in government commissions, ministries, legal aid cells, or policy think tanks. You\'ll draft reports, conduct research, prepare policy recommendations, and make real societal impact. Perfect for those who want meaningful work and public service.',
+        pros: [
+          'High social impact',
+          'Exposure to policy-making',
+          'Good work-life balance',
+          'Opportunities with UN and international bodies'
+        ],
+        cons: [
+          'Moderate salary compared to private sector',
+          'Competitive hiring process',
+          'Fewer total positions available',
+          'Slower career progression'
+        ],
+        actions: [
+          'Volunteer with legal aid clinics',
+          'Apply for government internships',
+          'Write policy analysis pieces',
+          'Build a strong writing portfolio',
+          'Network with NGO professionals'
+        ]
+      },
+      {
+        id: 'inhouse',
+        title: 'In-House Legal Counsel',
+        category: 'Corporate',
+        short: 'Join a company\'s legal team and work on internal matters',
+        description: 'Work inside companies advising business teams, reviewing contracts, ensuring compliance, and managing disputes. You\'ll collaborate with different departments and external lawyers. Great work-life balance with steady income and broad business exposure.',
+        pros: [
+          'Better work-life balance',
+          'Stable compensation',
+          'Long-term job security',
+          'Broad business exposure'
+        ],
+        cons: [
+          'Usually requires prior experience',
+          'Less pure legal work',
+          'Company-specific constraints',
+          'Limited litigation exposure'
+        ],
+        actions: [
+          'Learn privacy and compliance basics',
+          'Get compliance certifications',
+          'Develop business communication skills',
+          'Intern with corporate legal teams',
+          'Build understanding of contracts'
+        ]
+      },
+      {
+        id: 'research',
+        title: 'Legal Research & Academia',
+        category: 'Academia',
+        short: 'Pursue research, teaching, or work with think tanks',
+        description: 'Focus on academic writing, research projects, policy analysis, and teaching. Work with professors, think tanks like VIDHI or CPR, or pursue a PhD. Ideal if you love reading, writing, and want to contribute to legal scholarship.',
+        pros: [
+          'Intellectual satisfaction',
+          'Build strong publication record',
+          'Path to teaching career',
+          'Work with leading researchers'
+        ],
+        cons: [
+          'Lower starting salary',
+          'Very competitive positions',
+          'Requires patience and persistence',
+          'Limited immediate practical exposure'
+        ],
+        actions: [
+          'Write and publish research papers',
+          'Assist professors with projects',
+          'Build strong writing samples',
+          'Prepare for UGC NET if teaching',
+          'Attend academic conferences'
+        ]
+      },
+      {
+        id: 'legaltech',
+        title: 'Legal Technology & Startups',
+        category: 'Innovation',
+        short: 'Combine law with technology in a fast-growing field',
+        description: 'Work on legal technology solutions like contract automation, compliance platforms, or legal AI. Roles include product manager, legal analyst, or even starting your own venture. Perfect if you\'re interested in innovation and modern work culture.',
+        pros: [
+          'Fast-growing industry',
+          'High salary potential',
+          'Creative and modern work',
+          'Remote work opportunities'
+        ],
+        cons: [
+          'Requires tech understanding',
+          'Learning curve for tools',
+          'Less traditional legal work',
+          'Startup uncertainty'
+        ],
+        actions: [
+          'Learn about legal tech tools',
+          'Understand contract automation',
+          'Work with legal startups',
+          'Learn basic data analytics',
+          'Explore no-code platforms'
+        ]
+      },
+      {
+        id: 'special',
+        title: 'Specialized Practice Areas',
+        category: 'Niche Practice',
+        short: 'Focus on arbitration, mediation, or patent law',
+        description: 'Specialize in areas like arbitration (commercial dispute resolution), mediation (conflict resolution), or patent law (requires science background). These are high-paying niche fields that require years of experience but offer excellent long-term prospects.',
+        pros: [
+          'High specialization value',
+          'Excellent income potential',
+          'Growing field demand',
+          'Unique expertise advantage'
+        ],
+        cons: [
+          'Requires years to establish',
+          'Patent needs science background',
+          'Steep learning curve',
+          'Limited entry-level positions'
+        ],
+        actions: [
+          'Take arbitration/mediation courses',
+          'Work under experienced practitioners',
+          'Prepare for Patent Agent exam if eligible',
+          'Build niche expertise gradually',
+          'Network in specialized circles'
+        ]
+      }
     ];
 
-    /* ===== STATE ===== */
-    const KEY = 'prarthna_career_v3';
-    let selections = loadSelections();
-    let explorerIndex = 0;
-    let mode = 'cards';
-    let touchStartX = 0;
-    let touchEndX = 0;
+    // State management
+    let currentIndex = 0;
+    let selections = {};
+    const STORAGE_KEY = 'prarthna_career_choices';
 
-    /* ===== UTILITIES ===== */
-    function loadSelections() {
-      try { const raw = localStorage.getItem(KEY); return raw ? JSON.parse(raw) : {}; } catch (e) { return {}; }
-    }
-    function save() {
-      localStorage.setItem(KEY, JSON.stringify(selections));
-      localStorage.setItem(KEY + '_timestamp', new Date().toISOString());
-    }
-    function showTempToast(msg) {
-      const existing = document.querySelector('.toast');
-      if (existing) existing.remove();
-      const el = document.createElement('div');
-      el.className = 'toast';
-      el.textContent = msg;
-      document.body.appendChild(el);
-      setTimeout(() => { el.style.opacity = '0'; setTimeout(()=>el.remove(), 300); }, 1600);
-    }
-    function copyToClipboard(text) {
-      if (navigator.clipboard) return navigator.clipboard.writeText(text).catch(()=>{});
-      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
-    }
-
-    /* ===== RENDER CARDS (with delegation-friendly structure) ===== */
-    function renderCards(q = '') {
-      const cardsEl = document.getElementById('cards');
-      if (!cardsEl) return;
-      cardsEl.innerHTML = '';
-      const query = (q || '').trim().toLowerCase();
-
-      OPTIONS.forEach(opt => {
-        if (query) {
-          const hay = (opt.title + ' ' + opt.short + ' ' + opt.pros.join(' ') + ' ' + opt.cons.join(' ')).toLowerCase();
-          if (!hay.includes(query)) return;
+    // Load saved data
+    function loadData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          selections = JSON.parse(saved);
         }
+      } catch (e) {
+        console.error('Error loading data:', e);
+      }
+    }
 
-        const status = selections[opt.id] ? (selections[opt.id] === 'interested' ? '★ Interested' : '📋 Review') : '';
-        // Use a stable HTML string — event delegation will handle clicks
-        const html = `
-          <div class="card" data-optid="${opt.id}">
-            <h3>${opt.title}</h3>
-            <div class="muted">${opt.short}</div>
-            <div style="margin-top:8px">${ status ? `<span class="tag ${selections[opt.id]}">${status}</span>` : '' }</div>
-            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn" data-action="open" data-id="${opt.id}">View Details</button>
-              <button class="btn primary" data-action="toggle" data-id="${opt.id}">
-                ${selections[opt.id] === 'interested' ? '★ Interested' : selections[opt.id] === 'review' ? '📋 Review' : '+ Mark'}
-              </button>
-              ${ selections[opt.id] ? `<button class="btn ghost" data-action="share" data-id="${opt.id}">Share</button>` : '' }
-            </div>
-          </div>
-        `;
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = html;
-        // append the inner card element
-        cardsEl.appendChild(wrapper.firstElementChild);
+    // Save data
+    function saveData() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(selections));
+      } catch (e) {
+        console.error('Error saving data:', e);
+      }
+    }
+
+    // Show page
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
       });
-
-      // update dashboard count/progress
-      renderDashboard();
+      document.getElementById(pageId).classList.add('active');
     }
 
-    /* ===== EVENT DELEGATION FOR DYNAMIC BUTTONS INSIDE CARDS ===== */
-    function initCardsDelegation() {
-      const cardsEl = document.getElementById('cards');
-      if (!cardsEl) return;
-
-      cardsEl.addEventListener('click', (e) => {
-        const btn = e.target.closest('button');
-        if (!btn) return;
-        const action = btn.getAttribute('data-action');
-        const id = btn.getAttribute('data-id');
-
-        if (action === 'toggle' && id) {
-          // Cycle: undefined -> interested -> review -> none
-          if (selections[id] === 'interested') selections[id] = 'review';
-          else if (selections[id] === 'review') delete selections[id];
-          else selections[id] = 'interested';
-          save();
-          renderCards(document.getElementById('search') ? document.getElementById('search').value : '');
-          renderDashboard();
-          return;
-        }
-
-        if (action === 'open' && id) {
-          const idx = OPTIONS.findIndex(o => o.id === id);
-          if (idx >= 0) {
-            explorerIndex = idx;
-            showExplorer();
-          }
-          return;
-        }
-
-        if (action === 'share' && id) {
-          const opt = OPTIONS.find(o => o.id === id);
-          if (opt) shareOption(opt);
-          return;
-        }
-      });
-    }
-
-    /* ===== DASHBOARD ===== */
-    function renderDashboard() {
-      const selList = document.getElementById('selList');
-      const selCount = document.getElementById('selCount');
-      const progBar = document.getElementById('progBar');
-      if (!selList || !selCount || !progBar) return;
-
-      selList.innerHTML = '';
-      const keys = Object.keys(selections).filter(k => k !== '_notes');
-      const total = OPTIONS.length;
-      const selected = keys.length;
-      selCount.textContent = selected + ' / ' + total;
-      const pct = Math.round((selected / total) * 100);
-      progBar.style.width = pct + '%';
-
-      keys.forEach(k => {
-        const opt = OPTIONS.find(o => o.id === k);
-        if (!opt) return;
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.innerHTML = `
-          <div style="display:flex;gap:8px;align-items:center">
-            <strong>${opt.title}</strong>
-            <div class="small">${selections[k] === 'interested' ? '★' : '📋'}</div>
-          </div>
-          <button class="btn" data-action="jump" data-id="${k}">View</button>
-        `;
-        selList.appendChild(div);
-      });
-
-      // delegation for selection list jumps
-      selList.addEventListener('click', (e) => {
-        const btn = e.target.closest('button');
-        if (!btn) return;
-        const action = btn.getAttribute('data-action');
-        const id = btn.getAttribute('data-id');
-        if (action === 'jump' && id) {
-          const idx = OPTIONS.findIndex(o => o.id === id);
-          if (idx >= 0) {
-            explorerIndex = idx;
-            showExplorer();
-          }
-        }
-      }, { once: true }); // attach once to avoid multiple registrations
-    }
-
-    /* ===== EXPLORER & TIMELINE ===== */
-    function showExplorer() {
-      mode = 'explorer';
-      const landing = document.getElementById('landing');
-      const main = document.getElementById('main');
-      const cardsWrap = document.getElementById('cardsWrap');
-      const compareView = document.getElementById('compareView');
-      const explorer = document.getElementById('explorer');
-
-      if (landing) landing.classList.add('hidden');
-      if (main) main.classList.remove('hidden');
-      if (cardsWrap) cardsWrap.classList.add('hidden');
-      if (compareView) compareView.classList.add('hidden');
-      if (explorer) explorer.classList.remove('hidden');
-
-      showExplorerCard();
+    // Start exploring
+    function startExploring() {
+      showPage('explorerPage');
+      renderCard();
       showSwipeHint();
     }
 
-    function showExplorerCard() {
-      const opt = OPTIONS[explorerIndex];
-      const expDetails = document.getElementById('expDetails');
-      const expCount = document.getElementById('expCount');
-      if (!opt || !expDetails || !expCount) return;
-
-      expCount.textContent = (explorerIndex + 1) + ' / ' + OPTIONS.length;
-
-      expDetails.innerHTML = `
-        <h2 style="margin:0">${opt.title}</h2>
-        <div class="meta">${opt.short} • Type: ${opt.type}</div>
-        <p style="margin-top:12px;line-height:1.6">${opt.details}</p>
-        <div class="proscons">
-          <div class="pc">
-            <b>✓ Pros</b>
-            <ul class="small" style="margin-top:8px">
-              ${opt.pros.map(p => '<li>' + p + '</li>').join('')}
-            </ul>
-          </div>
-          <div class="pc">
-            <b>⚠ Cons</b>
-            <ul class="small" style="margin-top:8px">
-              ${opt.cons.map(p => '<li>' + p + '</li>').join('')}
-            </ul>
-          </div>
-        </div>
-      `;
-      renderTimeline(opt);
-    }
-
-    function renderTimeline(opt) {
-      const timelineView = document.getElementById('timelineView');
-      if (!timelineView) return;
-      timelineView.innerHTML = '';
-      opt.actions.forEach((action, idx) => {
-        const item = document.createElement('div');
-        item.className = 'timeline-item';
-        item.innerHTML = `
-          <div class="timeline-dot">${idx + 1}</div>
-          <div class="timeline-content"><div class="small">${action}</div></div>
-        `;
-        timelineView.appendChild(item);
-      });
-    }
-
-    /* ===== SWIPE SUPPORT (guarded) ===== */
-    function initSwipeGestures() {
-      const explorer = document.getElementById('explorer');
-      if (!explorer) return;
-      explorer.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive:true});
-      explorer.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, {passive:true});
-    }
-    function handleSwipe() {
-      const swipeThreshold = 50;
-      const diff = touchStartX - touchEndX;
-      if (Math.abs(diff) > swipeThreshold) {
-        if (diff > 0 && explorerIndex < OPTIONS.length - 1) {
-          explorerIndex++;
-          showExplorerCard();
-          showTempToast('Next →');
-        } else if (diff < 0 && explorerIndex > 0) {
-          explorerIndex--;
-          showExplorerCard();
-          showTempToast('← Previous');
-        }
-      }
-    }
+    // Show swipe hint on mobile
     function showSwipeHint() {
-      const hint = document.getElementById('swipeHint');
-      if (!hint) return;
-      if (window.innerWidth < 768 && mode === 'explorer') {
-        hint.classList.remove('hidden');
-        setTimeout(() => hint.classList.add('hidden'), 3000);
+      if (window.innerWidth < 768) {
+        const hint = document.getElementById('swipeHint');
+        hint.classList.add('show');
+        setTimeout(() => {
+          hint.classList.remove('show');
+        }, 3000);
       }
     }
 
-    /* ===== COMPARE VIEW ===== */
-    function showCompareView() {
-      const selected = Object.keys(selections).filter(k => k !== '_notes');
-      if (selected.length === 0) { showTempToast('Select at least one option first'); return; }
-      const cardsWrap = document.getElementById('cardsWrap');
-      const explorer = document.getElementById('explorer');
-      const compareView = document.getElementById('compareView');
-      if (cardsWrap) cardsWrap.classList.add('hidden');
-      if (explorer) explorer.classList.add('hidden');
-      if (compareView) compareView.classList.remove('hidden');
+    // Render current card
+    function renderCard() {
+      const option = OPTIONS[currentIndex];
+      const container = document.getElementById('cardContainer');
+      
+      const status = selections[option.id] || 'none';
+      
+      container.innerHTML = `
+        <div class="card-category">${option.category}</div>
+        <h2 class="card-title">${option.title}</h2>
+        <p class="card-subtitle">${option}</p>
+        <function_calls>
+<invoke name="artifacts">
+<parameter name="command">update</parameter>
+<parameter name="id">career_explorer_arch</parameter>
+<parameter name="old_str">      container.innerHTML =         <div class="card-category">${option.category}</div>         <h2 class="card-title">${option.title}</h2>         <p class="card-subtitle">${option</parameter> <parameter name="new_str">      container.innerHTML =
+<div class="card-category">${option.category}</div>
+<h2 class="card-title">${option.title}</h2>
+<p class="card-subtitle">${option.short}</p>
+<p class="card-description">${option.description}</p>
+<div class="pros-cons-container">
+      <div class="pros-cons-box">
+        <h4>✅ Advantages</h4>
+        <ul>
+          ${option.pros.map(pro => `<li>${pro}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="pros-cons-box">
+        <h4>⚠️ Challenges</h4>
+        <ul>
+          ${option.cons.map(con => `<li>${con}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
 
-      const compareGrid = document.getElementById('compareGrid');
-      if (!compareGrid) return;
-      compareGrid.innerHTML = '';
-      selected.forEach(id => {
-        const opt = OPTIONS.find(o => o.id === id);
-        if (!opt) return;
-        const card = document.createElement('div');
-        card.className = 'compare-card';
-        card.innerHTML = `
-          <h3 style="margin:0 0 8px 0">${opt.title}</h3>
-          <div class="small" style="margin-bottom:12px">${opt.short}</div>
-          <div style="margin-bottom:8px">
-            <strong style="font-size:13px">Pros:</strong>
-            <ul class="small" style="margin:4px 0">${opt.pros.slice(0,3).map(p=>'<li>'+p+'</li>').join('')}</ul>
-          </div>
-          <div>
-            <strong style="font-size:13px">Cons:</strong>
-            <ul class="small" style="margin:4px 0">${opt.cons.slice(0,3).map(p=>'<li>'+p+'</li>').join('')}</ul>
-          </div>
-        `;
-        compareGrid.appendChild(card);
-      });
+    <div class="action-steps">
+      <h4>🎯 Your Next Steps</h4>
+      <ol>
+        ${option.actions.map(action => `<li>${action}</li>`).join('')}
+      </ol>
+    </div>
+
+    <div class="button-group">
+      <button class="action-btn ${status === 'interested' ? 'interested' : ''}" onclick="markOption('interested')">
+        <span class="emoji">💚</span>
+        <span>Interested</span>
+      </button>
+      <button class="action-btn ${status === 'review' ? 'review' : ''}" onclick="markOption('review')">
+        <span class="emoji">📋</span>
+        <span>Review Later</span>
+      </button>
+      <button class="action-btn ${status === 'not-interested' ? 'not-interested' : ''}" onclick="markOption('not-interested')">
+        <span class="emoji">✖️</span>
+        <span>Not For Me</span>
+      </button>
+    </div>
+  `;
+
+  updateProgress();
+  updateNavButtons();
+}
+
+// Mark option
+function markOption(status) {
+  const option = OPTIONS[currentIndex];
+  selections[option.id] = status;
+  saveData();
+  renderCard();
+}
+
+// Update progress
+function updateProgress() {
+  const progress = ((currentIndex + 1) / OPTIONS.length) * 100;
+  document.getElementById('progressBar').style.width = progress + '%';
+  document.getElementById('progressText').textContent = `Option ${currentIndex + 1} of ${OPTIONS.length}`;
+}
+
+// Update navigation buttons
+function updateNavButtons() {
+  document.getElementById('prevBtn').disabled = currentIndex === 0;
+  document.getElementById('nextBtn').disabled = currentIndex === OPTIONS.length - 1;
+}
+
+// Navigation
+function nextCard() {
+  if (currentIndex < OPTIONS.length - 1) {
+    currentIndex++;
+    renderCard();
+  }
+}
+
+function previousCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderCard();
+  }
+}
+
+// Show summary
+function showSummary() {
+  showPage('summaryPage');
+  renderSummary();
+}
+
+// Render summary
+function renderSummary() {
+  const interested = [];
+  const review = [];
+  const notInterested = [];
+  
+  OPTIONS.forEach(option => {
+    const status = selections[option.id];
+    if (status === 'interested') interested.push(option);
+    else if (status === 'review') review.push(option);
+    else if (status === 'not-interested') notInterested.push(option);
+  });
+
+  document.getElementById('interestedCount').textContent = interested.length;
+  document.getElementById('reviewCount').textContent = review.length;
+  document.getElementById('viewedCount').textContent = Object.keys(selections).length;
+
+  renderSummarySection('interestedSection', 'interestedList', interested, 'interested');
+  renderSummarySection('reviewSection', 'reviewList', review, 'review');
+  renderSummarySection('notInterestedSection', 'notInterestedList', notInterested, 'not-interested');
+}
+
+function renderSummarySection(sectionId, listId, options, statusClass) {
+  const section = document.getElementById(sectionId);
+  const list = document.getElementById(listId);
+  
+  if (options.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+  list.innerHTML = options.map(option => `
+    <div class="option-card-small">
+      <div>
+        <div class="option-name">${option.title}</div>
+        <div class="option-type">${option.category}</div>
+      </div>
+      <span class="status-badge ${statusClass}">
+        ${statusClass === 'interested' ? '💚' : statusClass === 'review' ? '📋' : '✖️'}
+      </span>
+    </div>
+  `).join('');
+}
+
+// Back to exploring
+function backToExploring() {
+  showPage('explorerPage');
+  renderCard();
+}
+
+// Restart
+function restartExploration() {
+  if (confirm('This will clear all your selections. Are you sure?')) {
+    selections = {};
+    currentIndex = 0;
+    saveData();
+    showPage('explorerPage');
+    renderCard();
+  }
+}
+
+// Touch gestures for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+function handleSwipe() {
+  const swipeThreshold = 50;
+  const diff = touchStartX - touchEndX;
+  
+  if (Math.abs(diff) > swipeThreshold) {
+    if (diff > 0 && currentIndex < OPTIONS.length - 1) {
+      nextCard();
+    } else if (diff < 0 && currentIndex > 0) {
+      previousCard();
     }
+  }
+}
 
-    /* ===== SHARE / EXPORT / IMPORT (unchanged) ===== */
-    function shareOption(opt) {
-      const text = `${opt.title}\n\n${opt.short}\n\nPros: ${opt.pros.join(', ')}\nCons: ${opt.cons.join(', ')}\n\nNext steps:\n${opt.actions.map((a,i)=>`${i+1}. ${a}`).join('\n')}`;
-      if (navigator.share) {
-        navigator.share({title: opt.title, text}).catch(()=>{});
-      } else {
-        copyToClipboard(text);
-        showTempToast('Copied to clipboard!');
-      }
-    }
-    function exportCSV() {
-      const rows = [['ID','Title','Type','Status']];
-      Object.keys(selections).forEach(k => {
-        if (k === '_notes') return;
-        const o = OPTIONS.find(x => x.id === k);
-        if (o) rows.push([o.id, o.title, o.type, selections[k]]);
-      });
-      if (rows.length === 1) { showTempToast('No selections to export'); return; }
-      const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-      const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'prarthna_selections.csv'; a.click(); URL.revokeObjectURL(url);
-      showTempToast('CSV exported!');
-    }
-    function exportJSON() {
-      const data = JSON.stringify(selections, null, 2);
-      const blob = new Blob([data], {type:'application/json'}); const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'prarthna_selections.json'; a.click(); URL.revokeObjectURL(url);
-      showTempToast('JSON exported!');
-    }
-    function importJSON() {
-      const input = document.createElement('input'); input.type = 'file'; input.accept = 'application/json';
-      input.onchange = () => {
-        const f = input.files[0]; if (!f) return;
-        const reader = new FileReader();
-        reader.onload = e => {
-          try {
-            const obj = JSON.parse(e.target.result);
-            selections = obj || {};
-            save();
-            renderCards();
-            renderDashboard();
-            showTempToast('Import successful!');
-          } catch(err) {
-            showTempToast('Invalid JSON file');
-          }
-        };
-        reader.readAsText(f);
-      };
-      input.click();
-    }
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (document.getElementById('explorerPage').classList.contains('active')) {
+    if (e.key === 'ArrowRight') nextCard();
+    else if (e.key === 'ArrowLeft') previousCard();
+  }
+});
 
-    /* ===== EVENT HOOKUPS & INIT ===== */
-    function initTheme() {
-      const savedTheme = localStorage.getItem('prarthna_theme') || 'dark';
-      if (savedTheme === 'light') {
-        document.body.classList.add('light');
-        const lightBtn = document.getElementById('lightTheme'); if (lightBtn) lightBtn.classList.add('active');
-        const darkBtn = document.getElementById('darkTheme'); if (darkBtn) darkBtn.classList.remove('active');
-      }
-      const darkB = document.getElementById('darkTheme'); if (darkB) darkB.addEventListener('click', () => { document.body.classList.remove('light'); darkB.classList.add('active'); const l = document.getElementById('lightTheme'); if (l) l.classList.remove('active'); localStorage.setItem('prarthna_theme','dark'); });
-      const lightB = document.getElementById('lightTheme'); if (lightB) lightB.addEventListener('click', () => { document.body.classList.add('light'); lightB.classList.add('active'); const d = document.getElementById('darkTheme'); if (d) d.classList.remove('active'); localStorage.setItem('prarthna_theme','light'); });
-    }
-
-    function init() {
-      initTheme();
-      renderCards();
-      initCardsDelegation();
-      renderDashboard();
-      initSwipeGestures();
-
-      const startBtn = document.getElementById('startBtn');
-      if (startBtn) startBtn.addEventListener('click', () => { const landing = document.getElementById('landing'); const main = document.getElementById('main'); if (landing) landing.classList.add('hidden'); if (main) main.classList.remove('hidden'); window.scrollTo({top:0, behavior:'smooth'}); });
-
-      const beginBtn = document.getElementById('beginBtn'); if (beginBtn) beginBtn.addEventListener('click', showExplorer);
-      const skipBtn = document.getElementById('skipBtn'); if (skipBtn) skipBtn.addEventListener('click', () => { const landing = document.getElementById('landing'); const main = document.getElementById('main'); if (landing) landing.classList.add('hidden'); if (main) main.classList.remove('hidden'); });
-
-      const resetBtn = document.getElementById('resetBtn'); if (resetBtn) resetBtn.addEventListener('click', () => {
-        if (confirm('Reset all your selections?')) { localStorage.removeItem(KEY); selections = {}; renderCards(); renderDashboard(); showTempToast('Reset complete'); }
-      });
-
-      const importBtn = document.getElementById('importBtn'); if (importBtn) importBtn.addEventListener('click', importJSON);
-      const exportBtn = document.getElementById('exportBtn'); if (exportBtn) exportBtn.addEventListener('click', exportCSV);
-      const exportJsonBtn = document.getElementById('exportJsonBtn'); if (exportJsonBtn) exportJsonBtn.addEventListener('click', exportJSON);
-      const clearBtn = document.getElementById('clearBtn'); if (clearBtn) clearBtn.addEventListener('click', () => {
-        if (confirm('Clear all selections?')) { selections = {}; save(); renderCards(); renderDashboard(); showTempToast('All cleared'); }
-      });
-
-      const viewListBtn = document.getElementById('viewListBtn'); if (viewListBtn) viewListBtn.addEventListener('click', () => {
-        const cardsWrap = document.getElementById('cardsWrap'); const explorer = document.getElementById('explorer'); const compareView = document.getElementById('compareView');
-        if (cardsWrap) cardsWrap.classList.remove('hidden');
-        if (explorer) explorer.classList.add('hidden');
-        if (compareView) compareView.classList.add('hidden');
-      });
-
-      const compareBtn = document.getElementById('compareBtn'); if (compareBtn) compareBtn.addEventListener('click', showCompareView);
-      const closeCompare = document.getElementById('closeCompare'); if (closeCompare) closeCompare.addEventListener('click', () => {
-        const compareView = document.getElementById('compareView'); const cardsWrap = document.getElementById('cardsWrap');
-        if (compareView) compareView.classList.add('hidden'); if (cardsWrap) cardsWrap.classList.remove('hidden');
-      });
-
-      const startExplorerBtn = document.getElementById('startExplorerBtn'); if (startExplorerBtn) startExplorerBtn.addEventListener('click', showExplorer);
-      const search = document.getElementById('search'); if (search) search.addEventListener('input', (e) => renderCards(e.target.value));
-
-      const nextBtn = document.getElementById('nextBtn'); if (nextBtn) nextBtn.addEventListener('click', () => { if (explorerIndex < OPTIONS.length - 1) { explorerIndex++; showExplorerCard(); }});
-      const prevBtn = document.getElementById('prevBtn'); if (prevBtn) prevBtn.addEventListener('click', () => { if (explorerIndex > 0) { explorerIndex--; showExplorerCard(); }});
-
-      const markInterest = document.getElementById('markInterest'); if (markInterest) markInterest.addEventListener('click', () => {
-        const id = OPTIONS[explorerIndex].id; selections[id] = 'interested'; save(); showTempToast('★ Marked as Interested'); renderDashboard();
-      });
-      const markReview = document.getElementById('markReview'); if (markReview) markReview.addEventListener('click', () => {
-        const id = OPTIONS[explorerIndex].id; selections[id] = 'review'; save(); showTempToast('📋 Marked for Review'); renderDashboard();
-      });
-
-      // Make sure compare buttons inside cards also work (delegation already covers)
-    }
-
-    // start
-    init();
-  </script>
-  <!-- End script -->
-
-  <!-- Note: Re-insert/keep your full HTML structure (header, landing, main, footer) where indicated above.
-       The script provided is the drop-in replacement for your previous <script> block. -->
+// Initialize
+loadData();
+    </script>
 </body>
-</html>
+</html></parameter>
