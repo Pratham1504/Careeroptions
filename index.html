@@ -505,39 +505,7 @@
       min-width: 150px;
     }
 
-    /* Swipe slide animations for card container */
-.card-transition {
-  will-change: transform, opacity;
-  transition: transform 330ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
-}
-
-/* outgoing states */
-.slide-out-left {
-  transform: translateX(-24px) scale(0.99);
-  opacity: 0;
-}
-.slide-out-right {
-  transform: translateX(24px) scale(0.99);
-  opacity: 0;
-}
-
-/* incoming states (start off-screen, then to identity) */
-.slide-in-from-right {
-  transform: translateX(24px);
-  opacity: 0;
-}
-.slide-in-from-left {
-  transform: translateX(-24px);
-  opacity: 0;
-}
-
-/* when element is "settled" (base state) */
-.card-settled {
-  transform: translateX(0);
-  opacity: 1;
-  transition: transform 330ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
-}
-
+  
 
     /* Animations */
     @keyframes fadeIn {
@@ -1114,129 +1082,20 @@
       document.getElementById('nextBtn').disabled = currentIndex === OPTIONS.length - 1;
     }
 
-    // // Navigation
-    // function nextCard() {
-    //   if (currentIndex < OPTIONS.length - 1) {
-    //     currentIndex++;
-    //     renderCard();
-    //   }
-    // }
+    // Navigation
+    function nextCard() {
+      if (currentIndex < OPTIONS.length - 1) {
+        currentIndex++;
+        renderCard();
+      }
+    }
 
-    // function previousCard() {
-    //   if (currentIndex > 0) {
-    //     currentIndex--;
-    //     renderCard();
-    //   }
-    // }
-
-    // Small helper to change card with slide animation
-function changeCardWithAnimation(direction) {
-  // direction: 'next' or 'prev'
-  const container = document.getElementById('cardContainer');
-  if (!container) { // fallback
-    if (direction === 'next') currentIndex = Math.min(currentIndex + 1, OPTIONS.length - 1);
-    else currentIndex = Math.max(currentIndex - 1, 0);
-    renderCard();
-    return;
-  }
-
-  // Determine filtered list (if you use filtering) — adapt if needed
-  const list = typeof getFilteredOptions === 'function' ? getFilteredOptions() : OPTIONS;
-  const maxIndex = list.length - 1;
-
-  // If can't move, just flash a tiny hint
-  if (direction === 'next' && currentIndex >= maxIndex) {
-    // small pulse
-    container.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(0)' }], { duration: 180 });
-    return;
-  }
-  if (direction === 'prev' && currentIndex <= 0) {
-    container.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 180 });
-    return;
-  }
-
-  // Prepare classes
-  container.classList.add('card-transition');
-
-  // outgoing class
-  const outClass = direction === 'next' ? 'slide-out-left' : 'slide-out-right';
-  const incomingClass = direction === 'next' ? 'slide-in-from-right' : 'slide-in-from-left';
-
-  // apply outgoing animation
-  container.classList.remove('card-settled', 'slide-in-from-left', 'slide-in-from-right', 'slide-out-left', 'slide-out-right');
-  // ensure reflow so class changes take effect
-  void container.offsetWidth;
-  container.classList.add(outClass);
-
-  // wait for transitionend, then change content and animate incoming
-  const onOutEnd = (ev) => {
-    // only handle transition for transform/opacity to avoid duplicate calls
-    if (ev.propertyName && ev.propertyName !== 'transform' && ev.propertyName !== 'opacity') return;
-
-    container.removeEventListener('transitionend', onOutEnd);
-
-    // update index
-    if (direction === 'next') currentIndex = Math.min(currentIndex + 1, maxIndex);
-    else currentIndex = Math.max(currentIndex - 1, 0);
-
-    // render new content immediately but put it in incoming start state
-    renderCard();
-
-    // set incoming initial state
-    container.classList.remove(outClass);
-    container.classList.add(incomingClass);
-
-    // force reflow again so the incoming start style is applied before transition to settled
-    void container.offsetWidth;
-
-    // then transition to settled
-    requestAnimationFrame(() => {
-      container.classList.remove(incomingClass);
-      container.classList.add('card-settled');
-    });
-
-    // clean up after transition completes
-    const cleanup = (e2) => {
-      if (e2.propertyName && e2.propertyName !== 'transform' && e2.propertyName !== 'opacity') return;
-      container.removeEventListener('transitionend', cleanup);
-      // keep card-transition and card-settled; remove any stray classes
-      container.classList.remove('slide-out-left','slide-out-right','slide-in-from-left','slide-in-from-right');
-    };
-    container.addEventListener('transitionend', cleanup);
-  };
-
-  container.addEventListener('transitionend', onOutEnd);
-}
-
-// Replace simple nextCard / previousCard
-function nextCard() {
-  // If you have filtering, changeCardWithAnimation will fetch filtered list
-  changeCardWithAnimation('next');
-}
-
-function previousCard() {
-  changeCardWithAnimation('prev');
-}
-
-// Swipe handler: call changeCardWithAnimation instead of directly nextCard()/previousCard()
-let touchStartX = 0;
-let touchEndX = 0;
-
-document.addEventListener('touchstart', e => {
-  touchStartX = e.changedTouches[0].screenX;
-});
-
-document.addEventListener('touchend', e => {
-  touchEndX = e.changedTouches[0].screenX;
-  const swipeThreshold = 50;
-  const diff = touchStartX - touchEndX;
-
-  if (Math.abs(diff) > swipeThreshold) {
-    if (diff > 0) changeCardWithAnimation('next');
-    else changeCardWithAnimation('prev');
-  }
-});
-
+    function previousCard() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderCard();
+      }
+    }
 
     // Show summary
     function showSummary() {
