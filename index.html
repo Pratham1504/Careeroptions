@@ -607,7 +607,9 @@
         </div>
       </div>
 
-      <button class="btn" onclick="startExploring()">Let's Explore Your Options</button>
+      <!--<button class="btn" onclick="startExploring()">Let's Explore Your Options</button>-->
+      <button type="button" class="btn" id="startBtn">Let's Explore Your Options</button>
+
     </div>
   </div>
 
@@ -1168,7 +1170,8 @@
         else if (e.key === 'ArrowLeft') previousCard();
       }
     });
-
+    const startBtn = document.getElementById('startBtn');
+    if (startBtn) startBtn.addEventListener('click', startExploring);
     // Initialize
     loadData();
   </script>
